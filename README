@@ -58,6 +58,17 @@ Configure your app.yml:
               client: curl # either pear, curl, or zend
               log_level: err # all logs of this level or above will be logged into hoptoad
 
+  * In factories.yml of your applications:
+
+          [yml]
+          all:
+            logger:
+              class: sfHoptoadLogger
+                param:
+                  level:   err
+                  api_key: 1c8457a2b63b83343f38001320c9e7dd
+
+
   * Clear your cache
 
         $ symfony cc
