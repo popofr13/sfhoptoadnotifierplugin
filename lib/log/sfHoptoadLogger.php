@@ -11,11 +11,12 @@
  */
 class sfHoptoadLogger extends sfLogger {
 
-  protected $apiKey = null,
-            $client = 'curl';
-
-  /* instance of rich's client */
-  private $hoptoadClient;
+    /**
+     * Services_Hoptoad object.
+     *
+     * @var Services_Hoptoad
+     */
+    private $hoptoadClient;
 
   /**
    * Logs a message.
@@ -46,27 +47,13 @@ class sfHoptoadLogger extends sfLogger {
   {
     parent::initialize($dispatcher, $options);
 
-    // load the lib
-    require_once(dirname(__FILE__) . '/../rich-php-hoptoad-notifier/Hoptoad.php');
-
-    // API key
-    if (!isset($options['api_key']))
-    {
-      throw new sfConfigurationException('You must provide an "api_key" parameter for this logger.');
-    }
-    $this->apiKey = $options['api_key'];
-
-    // Client (pear, curl, or zend)
-    if (isset($options['client']))
-    {
-      $this->client = $options['client'];
-    }
+    $params = $options;
     
     // Environment (prod, test, ...)
-    $env = sfConfig::get('sf_environment', 'prod');
+    $params['env'] = sfConfig::get('sf_environment', 'cli');
 
     // Instanciate the service
-    $this->hoptoadClient = new Services_Hoptoad($this->apiKey, $env, $this->client);
+    $this->hoptoadClient = sfHoptoadNotifierPluginConfiguration::getHoptoadClient($params);
   }
 
 }
